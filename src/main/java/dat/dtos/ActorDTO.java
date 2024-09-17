@@ -1,6 +1,7 @@
 package dat.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import dat.entities.Actor;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,5 +17,10 @@ public class ActorDTO {
 
     private int id;
     private String name;
+
+    public ActorDTO(Actor actor) {
+        this.id = actor.getId();
+        this.name = actor.getName();
+    }
 }
 

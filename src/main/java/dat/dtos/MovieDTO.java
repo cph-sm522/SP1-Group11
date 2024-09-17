@@ -40,8 +40,8 @@ public class MovieDTO {
         this.rating = movie.getRating();
         this.overview = movie.getOverview();
         this.releaseDate = movie.getReleaseDate();
-        //this.director = new PersonDTO(movie.getDirector());
-        //this.actor=new PersonDTO(movie.getActor());
+        this.director = movie.getDirector();
+
 
     }
 }

@@ -1,5 +1,6 @@
 package dat.entities;
 
+import dat.dtos.DirectorDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,5 +22,9 @@ public class Director{
     @OneToMany(mappedBy = "director")
     private Set<Movie> movies;
 
+    public Director(DirectorDTO directorDTO) {
+        this.id = directorDTO.getId();
+        this.name = directorDTO.getName();
+    }
 
 }

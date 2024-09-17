@@ -1,9 +1,11 @@
 package dat.entities;
 
+import dat.dtos.MovieDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -54,5 +56,17 @@ public class Movie {
         WESTERN,
         SPORT,
         SUPERHERO
+    }
+
+    public Movie(MovieDTO movieDTO){
+        this.id = movieDTO.getId();
+        this.title = movieDTO.getTitle();
+        this.genre = movieDTO.getGenre();
+        this.duration = movieDTO.getDuration();
+        this.rating = movieDTO.getRating();
+        this.overview = movieDTO.getOverview();
+        this.releaseDate = movieDTO.getReleaseDate();
+        this.director = movieDTO.getDirector();
+        this.actor = movieDTO.getActor();
     }
 }
