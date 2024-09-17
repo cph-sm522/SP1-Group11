@@ -15,7 +15,7 @@ import java.net.http.HttpResponse;
 public class Main {
     public static void main(String[] args) throws URISyntaxException, IOException, InterruptedException {
         // EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("persons");
-        String apiKey = System.getenv("api_key");
+        String apiKey = System.getenv("api_key"); // HUSK ÆNDRING AF API NAVN
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(new URI("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=2019-01-01&sort_by=popularity.desc&with_origin_country=DK&api_key=" + apiKey))
