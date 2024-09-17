@@ -18,7 +18,7 @@ public class Main {
         String apiKey = System.getenv("api_key");
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=2019-01-01&sort_by=popularity.desc&with_origin_country=DK?api:key=" + apiKey))
+                .uri(new URI("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=2019-01-01&sort_by=popularity.desc&with_origin_country=DK&api_key=" + apiKey))
                 .GET()
                 .build();
 
