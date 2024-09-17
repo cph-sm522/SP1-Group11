@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import dat.entities.Actor;
 import dat.entities.Director;
 import dat.entities.Movie;
-import dat.entities.Person;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
