@@ -1,6 +1,6 @@
 package dat.entities;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -10,5 +10,14 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class Actor extends Person {
+public class Actor {
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private int id;
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "actor_id")
+    private Movie movies;
+
 }

@@ -1,7 +1,9 @@
 package dat.entities;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Set;
 
 @Entity
 @ToString
@@ -10,7 +12,15 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class Director extends Person {
+public class Director{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private String name;
+
+    @OneToMany(mappedBy = "director")
+    private Set<Movie> movies;
 
 
 }

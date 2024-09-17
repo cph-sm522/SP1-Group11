@@ -12,11 +12,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PersonDTO {
+public class DirectorDTO {
 
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private String job;
 }

@@ -1,12 +1,11 @@
 package dat.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Set;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,9 +25,12 @@ public class Movie {
     private String overview;
     private LocalDate releaseDate;
 
-
+    @ManyToOne
+    @JoinColumn(name = "director_id")
     private Director director;
-    private Actor actor;
+
+    @OneToMany(mappedBy = "actor")
+    private Set<Actor> actor;
 
     public enum Genre{
         ACTION,
