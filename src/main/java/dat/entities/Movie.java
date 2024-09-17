@@ -30,7 +30,7 @@ public class Movie {
     private Director director;
     private Actor actor;
 
-    private enum Genre{
+    public enum Genre{
         ACTION,
         ADVENTURE,
         COMEDY,
