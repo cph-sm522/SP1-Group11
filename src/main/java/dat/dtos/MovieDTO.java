@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import dat.entities.Actor;
 import dat.entities.Director;
 import dat.entities.Movie;
+import dat.entities.Person;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,6 +42,8 @@ public class MovieDTO {
         this.rating = movie.getRating();
         this.overview = movie.getOverview();
         this.releaseDate = movie.getReleaseDate();
+        this.director = new PersonDTO(movie.getDirector());
+        this.actor=new PersonDTO(movie.getActor());
 
     }
 
