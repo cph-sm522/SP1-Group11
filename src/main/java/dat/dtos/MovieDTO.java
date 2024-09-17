@@ -10,8 +10,10 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,7 +32,7 @@ public class MovieDTO {
     private LocalDate releaseDate;
 
     private Director director;
-    private Actor actor;
+    private Set<Actor> actors;
 
     public MovieDTO(Movie movie) {
         this.id = movie.getId();
@@ -40,8 +42,9 @@ public class MovieDTO {
         this.rating = movie.getRating();
         this.overview = movie.getOverview();
         this.releaseDate = movie.getReleaseDate();
-        //this.director = new PersonDTO(movie.getDirector());
-        //this.actor=new PersonDTO(movie.getActor());
+        this.director = movie.getDirector();
+        this.actors = movie.getActors();
+
 
     }
 }
