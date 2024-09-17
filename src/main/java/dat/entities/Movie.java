@@ -32,7 +32,7 @@ public class Movie {
     private Director director;
 
     @OneToMany(mappedBy = "actor")
-    private Set<Actor> actor;
+    private Set<Actor> actors;
 
     public enum Genre{
         ACTION,
@@ -67,6 +67,6 @@ public class Movie {
         this.overview = movieDTO.getOverview();
         this.releaseDate = movieDTO.getReleaseDate();
         this.director = movieDTO.getDirector();
-        this.actor = movieDTO.getActor();
+        this.actors = movieDTO.getActors();
     }
 }
