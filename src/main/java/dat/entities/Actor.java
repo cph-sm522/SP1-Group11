@@ -11,6 +11,10 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@NamedQueries({
+        @NamedQuery(name = "Actor.findByName", query = "SELECT a FROM Actor a WHERE a.name = :name"),
+        @NamedQuery(name = "Actor.findAll", query = "SELECT a FROM Actor a")
+})
 public class Actor {
     @Id
     private int id;
