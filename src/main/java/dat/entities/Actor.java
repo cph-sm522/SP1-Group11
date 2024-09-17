@@ -12,7 +12,6 @@ import lombok.*;
 @Builder
 public class Actor {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
 
