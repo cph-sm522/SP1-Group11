@@ -22,7 +22,7 @@ import java.util.Set;
 
 public class Main {
     public static void main(String[] args) throws URISyntaxException, IOException, InterruptedException {
-        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("persons");
+        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("movieDB-SP1");
         String apiKey = System.getenv("api_key");
 
         String responseBody = fetchMoviesFromAPI(apiKey);
@@ -56,6 +56,7 @@ public class Main {
         for (JsonNode movieNode : moviesNode) {
 
             // henter filmdetaljer fra vores Json
+            Long id = movieNode.get("id").asLong();
             String title = movieNode.get("title").asText();
             LocalDate releaseDate = LocalDate.parse(movieNode.get("release_date").asText());
             Movie.Genre genre = Movie.Genre.valueOf(movieNode.get("genre_ids").get(0).asText());

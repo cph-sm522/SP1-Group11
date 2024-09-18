@@ -15,10 +15,8 @@ import java.util.Set;
 @Setter
 @ToString
 @Builder
-
 public class Movie {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private Genre genre;
@@ -31,7 +29,10 @@ public class Movie {
     @JoinColumn(name = "director_id")
     private Director director;
 
-    @OneToMany(mappedBy = "actor")
+    @ManyToMany
+    @JoinTable(name = "movie_actors",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "actor_id"))
     private Set<Actor> actors;
 
     public enum Genre{

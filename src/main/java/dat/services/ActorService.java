@@ -10,12 +10,14 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ActorService {
     private static final String apiKey = System.getenv("api_key");
 
-    public static List<ActorDTO> getActors(String movieId) throws IOException {
+    public static Set<ActorDTO> getActors(Long movieId) throws IOException {
         HttpResponse<String> response;
         ObjectMapper objectMapper = new ObjectMapper();
         String uri = "https://api.themoviedb.org/3/movie/" + movieId + "/credits?language=en-US&api_key=" + apiKey;

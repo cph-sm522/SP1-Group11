@@ -58,7 +58,7 @@ public class MovieDAO {
         }
     }
 
-    public MovieDTO updateActivity(MovieDTO movieDTO) {
+/*    public MovieDTO updateActivity(MovieDTO movieDTO) {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
@@ -111,7 +111,7 @@ public class MovieDAO {
         } finally {
             em.close();
         }
-    }
+    }*/
 
     public static MovieDTO getMovieById(Long id) {
         try (EntityManager em = emf.createEntityManager()) {
