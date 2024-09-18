@@ -35,9 +35,10 @@ public class Movie {
 
     @ManyToMany
     @JoinTable(name = "movie_actors",
-            joinColumns = @JoinColumn(name = "actor_id"),
-            inverseJoinColumns = @JoinColumn(name = "movie_id"))
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "actor_id"))
     private Set<Actor> actors;
+
 
     public enum Genre {
         ACTION(28, "Action"),
