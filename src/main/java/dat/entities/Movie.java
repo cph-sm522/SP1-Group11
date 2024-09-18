@@ -8,6 +8,7 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @AllArgsConstructor
@@ -20,7 +21,9 @@ public class Movie {
     @Id
     private Long id;
     private String title;
+    @Enumerated(EnumType.STRING)
     private Genre genre;
+
     private double duration;
     private double rating;
     private String overview;
@@ -31,12 +34,11 @@ public class Movie {
     private Director director;
 
     @ManyToMany
-    /*@JoinTable(name = "movie_actors",
+    @JoinTable(name = "movie_actors",
             joinColumns = @JoinColumn(name = "actor_id"),
-            inverseJoinColumns = @JoinColumn(name = "movie_id"))*/
+            inverseJoinColumns = @JoinColumn(name = "movie_id"))
     private Set<Actor> actors;
 
-    @Table(name = "genre")
     public enum Genre {
         ACTION(28, "Action"),
         ADVENTURE(12, "Adventure"),
@@ -84,7 +86,7 @@ public class Movie {
         }
     }
 
-    public Movie(MovieDTO movieDTO){
+    public Movie(MovieDTO movieDTO) {
         this.id = movieDTO.getId();
         this.title = movieDTO.getTitle();
         this.genre = movieDTO.getGenre();
@@ -92,9 +94,16 @@ public class Movie {
         this.rating = movieDTO.getRating();
         this.overview = movieDTO.getOverview();
         this.releaseDate = movieDTO.getReleaseDate();
-        this.director = new Director(movieDTO.getDirector());
-        this.actors = movieDTO.getActors().stream()
-                .map(Actor::new)
-                .collect(Collectors.toSet());
+        if (movieDTO.getDirector() != null) {
+            this.director = new Director(movieDTO.getDirector());
+        }
+        if (movieDTO.getActors() != null) {
+            this.actors = movieDTO.getActors().stream()
+                    .map(Actor::new)
+                    .collect(Collectors.toSet());
+        } else {
+            this.actors = new HashSet<>();
+        }
     }
+
 }

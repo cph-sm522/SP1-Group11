@@ -7,6 +7,7 @@ import dat.entities.Director;
 import dat.entities.Movie;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -31,8 +32,12 @@ public class MovieDAO {
 
     public MovieDTO createMovie(MovieDTO movieDTO) {
         Movie movie = new Movie(movieDTO);
-        try (EntityManager em = emf.createEntityManager()) {
-            em.getTransaction().begin();
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+
+        try {
+            transaction.begin();
+
 
             Director director = em.find(Director.class, movieDTO.getDirector().getId());
             if (director != null) {
@@ -41,24 +46,37 @@ public class MovieDAO {
                 em.persist(movie.getDirector());
             }
 
+            // Handle Actors
             Set<Actor> actors = new HashSet<>();
             for (ActorDTO actorDTO : movieDTO.getActors()) {
                 Actor actor = em.find(Actor.class, actorDTO.getId());
-                if (actor != null) {
-                    actors.add(actor);
-                } else {
+                if (actor == null) {
                     actor = new Actor(actorDTO);
                     em.persist(actor);
-                    actors.add(actor);
                 }
-                movie.setActors(actors);
-
-                em.persist(movie);
-                em.getTransaction().commit();
+                actors.add(actor);
             }
+            movie.setActors(actors);
+
+
+            em.persist(movie);
+
+
+            transaction.commit();
+
+
             return new MovieDTO(movie);
+
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new RuntimeException("Error creating movie", e);
+        } finally {
+            em.close();
         }
     }
+
 
 /*    public MovieDTO updateActivity(MovieDTO movieDTO) {
         EntityManager em = emf.createEntityManager();

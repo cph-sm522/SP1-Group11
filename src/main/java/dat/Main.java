@@ -27,7 +27,11 @@ import java.util.Set;
 public class Main {
     public static void main(String[] args) throws URISyntaxException, IOException, InterruptedException {
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory("movieDB-SP1");
-        String apiKey = System.getenv("api_key");
+        final String apiKey = System.getenv("api_key");
+        if (apiKey == null || apiKey.isEmpty()) {
+            throw new IllegalStateException("API key is not set. Please set the 'api_key' environment variable.");
+        }
+
 
         String responseBody = fetchMoviesFromAPI(apiKey);
         if (responseBody != null) {
@@ -71,7 +75,8 @@ public class Main {
             Set<ActorDTO> actors = ActorService.getActors(id);
 
             // opret og persistere film
-            MovieService.createMovie(title, releaseDate, genre, rating, overview, director, actors, emf);
+            MovieService.createMovie(id, title, releaseDate, genre, rating, overview, director, actors, emf);
+
         }
     }
 }
