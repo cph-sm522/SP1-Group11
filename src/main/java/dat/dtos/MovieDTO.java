@@ -44,7 +44,5 @@ public class MovieDTO {
         this.releaseDate = movie.getReleaseDate();
         this.director = movie.getDirector();
         this.actors = movie.getActors();
-
-
     }
 }
