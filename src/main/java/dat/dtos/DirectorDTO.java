@@ -20,9 +20,11 @@ public class DirectorDTO {
     @JsonProperty("id")
     private int id;
     private String name;
+    private String job;
 
     public DirectorDTO(Director director) {
         this.id = director.getId();
         this.name = director.getName();
+        this.job=director.getJob();
     }
 }

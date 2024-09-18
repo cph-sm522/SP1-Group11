@@ -22,9 +22,13 @@ public class Director{
     @OneToMany(mappedBy = "director")
     private Set<Movie> movies;
 
+    private String job;
+
     public Director(DirectorDTO directorDTO) {
         this.id = directorDTO.getId();
         this.name = directorDTO.getName();
+        this.job = directorDTO.getJob();
+
     }
 
 }
