@@ -3,10 +3,14 @@ package dat;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dat.config.HibernateConfig;
+import dat.dtos.ActorDTO;
+import dat.dtos.DirectorDTO;
 import dat.dtos.MovieDTO;
 import dat.entities.Actor;
 import dat.entities.Director;
 import dat.entities.Movie;
+import dat.services.ActorService;
+import dat.services.DirectorService;
 import dat.services.MovieService;
 import jakarta.persistence.EntityManagerFactory;
 
@@ -59,12 +63,12 @@ public class Main {
             Long id = movieNode.get("id").asLong();
             String title = movieNode.get("title").asText();
             LocalDate releaseDate = LocalDate.parse(movieNode.get("release_date").asText());
-            Movie.Genre genre = Movie.Genre.valueOf(movieNode.get("genre_ids").get(0).asText());
+            Movie.Genre genre = Movie.Genre.fromId(movieNode.get("genre_ids").get(0).asInt());
             double rating = movieNode.get("vote_average").asDouble();
             String overview = movieNode.get("overview").asText();
 
-            Director director = new Director();
-            Set<Actor> actors = new HashSet<>();
+            DirectorDTO director = DirectorService.getDirectorInfo(id);
+            Set<ActorDTO> actors = ActorService.getActors(id);
 
             // opret og persistere film
             MovieService.createMovie(title, releaseDate, genre, rating, overview, director, actors, emf);

@@ -29,4 +29,5 @@ public class Actor {
         this.id = actorDTO.getId();
         this.name = actorDTO.getName();
     }
+
 }

@@ -1,5 +1,6 @@
 package dat.daos;
 
+import dat.dtos.ActorDTO;
 import dat.dtos.MovieDTO;
 import dat.entities.Actor;
 import dat.entities.Director;
@@ -41,12 +42,13 @@ public class MovieDAO {
             }
 
             Set<Actor> actors = new HashSet<>();
-            for (Actor actor : movieDTO.getActors()) {
-                Actor foundActor = em.find(Actor.class, actor.getId());
-                if (foundActor != null) {
-                    actors.add(foundActor);
+            for (ActorDTO actorDTO : movieDTO.getActors()) {
+                Actor actor = em.find(Actor.class, actorDTO.getId());
+                if (actor != null) {
+                    actors.add(actor);
                 } else {
-                    em.persist(movie);
+                    actor = new Actor(actorDTO);
+                    em.persist(actor);
                     actors.add(actor);
                 }
                 movie.setActors(actors);

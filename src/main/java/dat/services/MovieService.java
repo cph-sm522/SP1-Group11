@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class MovieService {
 
-    public static MovieDTO createMovie(Long id, String title, LocalDate releaseDate, Movie.Genre genre, double rating, String overview, Director director, Set<Actor> actors, EntityManagerFactory emf) throws IOException, InterruptedException {
+    public static MovieDTO createMovie(Long id, String title, LocalDate releaseDate, Movie.Genre genre, double rating, String overview, DirectorDTO director, Set<ActorDTO> actors, EntityManagerFactory emf) throws IOException, InterruptedException {
 
         MovieDAO movieDAO = MovieDAO.getInstance(emf);
         DirectorDTO directorInfo = DirectorService.getDirectorInfo(id);

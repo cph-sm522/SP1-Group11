@@ -11,6 +11,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -31,8 +32,8 @@ public class MovieDTO {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
 
-    private Director director;
-    private Set<Actor> actors;
+    private DirectorDTO director;
+    private Set<ActorDTO> actors;
 
     public MovieDTO(Movie movie) {
         this.id = movie.getId();
@@ -42,7 +43,9 @@ public class MovieDTO {
         this.rating = movie.getRating();
         this.overview = movie.getOverview();
         this.releaseDate = movie.getReleaseDate();
-        this.director = movie.getDirector();
-        this.actors = movie.getActors();
+        this.director = new DirectorDTO(movie.getDirector());
+        this.actors = movie.getActors().stream()
+                .map(ActorDTO::new)
+                .collect(Collectors.toSet());
     }
 }
