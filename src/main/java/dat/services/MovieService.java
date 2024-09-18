@@ -4,8 +4,6 @@ import dat.daos.MovieDAO;
 import dat.dtos.ActorDTO;
 import dat.dtos.DirectorDTO;
 import dat.dtos.MovieDTO;
-import dat.entities.Actor;
-import dat.entities.Director;
 import dat.entities.Movie;
 import jakarta.persistence.EntityManagerFactory;
 
@@ -21,7 +19,7 @@ public class MovieService {
         DirectorDTO directorInfo = DirectorService.getDirectorInfo(id);
         Set<ActorDTO> actorInfo = ActorService.getActors(id);
 
-        // Normally you would get this data from a form on a website or similar
+        // Create MovieDTO object
         MovieDTO movieDTO = MovieDTO.builder()
                 .id(id)
                 .title(title)
@@ -33,14 +31,11 @@ public class MovieService {
                 .actors(actors)
                 .build();
 
-        // Persist data to database
+        // Convert movieDTO to JSON string
         String json = JsonService.convertObjectToJson(movieDTO);
+        System.out.println("Movie Data as JSON: " + json); // For logging or debugging
+
+        // Persist movieDTO using DAO
         return movieDAO.createMovie(movieDTO);
     }
-
-   /* public static MovieDTO updateMovie(EntityManagerFactory emf, MovieDTO activityDTO) {
-        MovieDAO movieDAO = MovieDAO.getInstance(emf);
-        // Potentially we could do some validation here before updating the activity
-        return movieDAO.updateMovie(movieDTO);
-    }*/
 }

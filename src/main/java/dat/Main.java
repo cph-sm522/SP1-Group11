@@ -57,26 +57,42 @@ public class Main {
         }
     }
 
-    public static void persistDataToDB(String responseBody, EntityManagerFactory emf) throws IOException, InterruptedException {
+    public static void persistDataToDB(String responseBody, EntityManagerFactory emf) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode moviesNode = objectMapper.readTree(responseBody).get("results");
 
-        for (JsonNode movieNode : moviesNode) {
+        try (var entityManager = emf.createEntityManager()) {
+            var transaction = entityManager.getTransaction();
+            transaction.begin();
 
-            // henter filmdetaljer fra vores Json
-            Long id = movieNode.get("id").asLong();
-            String title = movieNode.get("title").asText();
-            LocalDate releaseDate = LocalDate.parse(movieNode.get("release_date").asText());
-            Movie.Genre genre = Movie.Genre.fromId(movieNode.get("genre_ids").get(0).asInt());
-            double rating = movieNode.get("vote_average").asDouble();
-            String overview = movieNode.get("overview").asText();
+            for (JsonNode movieNode : moviesNode) {
+                try {
+                    Long id = movieNode.get("id").asLong();
+                    String title = movieNode.get("title").asText();
+                    LocalDate releaseDate = movieNode.hasNonNull("release_date") ?
+                            LocalDate.parse(movieNode.get("release_date").asText()) : null;
 
-            DirectorDTO director = DirectorService.getDirectorInfo(id);
-            Set<ActorDTO> actors = ActorService.getActors(id);
+                    double rating = movieNode.get("vote_average").asDouble();
+                    String overview = movieNode.get("overview").asText();
 
-            // opret og persistere film
-            MovieService.createMovie(id, title, releaseDate, genre, rating, overview, director, actors, emf);
+                    // Select only the first genre
+                    Movie.Genre genre = Movie.Genre.fromId(movieNode.get("genre_ids").get(0).asInt());
 
+                    DirectorDTO director = DirectorService.getDirectorInfo(id);
+                    Set<ActorDTO> actors = ActorService.getActors(id);
+
+                    MovieService.createMovie(id, title, releaseDate, genre, rating, overview, director, actors, emf);
+
+                } catch (Exception e) {
+                    System.err.println("Error processing movie: " + movieNode.get("title").asText() + " - " + e.getMessage());
+                }
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            System.err.println("Error persisting data to DB: " + e.getMessage());
         }
     }
+
+
 }
