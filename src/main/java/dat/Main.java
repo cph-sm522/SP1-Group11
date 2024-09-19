@@ -65,14 +65,14 @@ public class Main {
         }
     }
 
-    private static int missingDataIdCounter = 1;
+    private static int missingDataIdCounter = -1;
 
     public static ActorDTO createDefaultActor() {
-        return new ActorDTO(missingDataIdCounter++, "no data");
+        return new ActorDTO(missingDataIdCounter--, "no data");
     }
 
     public static DirectorDTO createDefaultDirector() {
-        return new DirectorDTO(missingDataIdCounter++, "no data", "no job");
+        return new DirectorDTO(missingDataIdCounter--, "no data", "no job");
     }
 
     public static void persistDataToDB(JsonNode moviesNode, EntityManagerFactory emf) {
