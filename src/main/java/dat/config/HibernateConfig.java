@@ -68,7 +68,7 @@ public class HibernateConfig {
 
     private static String getDBName() {
 //        return Utils.getPropertyValue("db.name", "properties-from-pom.properties");
-        return "INSERT DB NAME";
+        return "movieDB-SP1";
     }
 
     private static Properties setBaseProperties(Properties props){

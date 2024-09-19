@@ -13,7 +13,7 @@ import java.net.http.HttpResponse;
 public class DirectorService {
     private static final String apiKey = System.getenv("api_key");
 
-    public static DirectorDTO getDirectorInfo(String movieId) {
+    public static DirectorDTO getDirectorInfo(Long movieId) {
         HttpResponse<String> response;
         ObjectMapper objectMapper = new ObjectMapper();
         String uri = "https://api.themoviedb.org/3/movie/" + movieId + "/credits?language=en-US&api_key=" + apiKey;

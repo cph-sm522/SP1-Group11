@@ -4,6 +4,8 @@ import dat.dtos.ActorDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @ToString
 @NoArgsConstructor
@@ -20,12 +22,12 @@ public class Actor {
     private int id;
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "actor_id")
-    private Movie movies;
+    @ManyToMany(mappedBy = "actors")
+    private Set<Movie> movies;
 
     public Actor(ActorDTO actorDTO) {
         this.id = actorDTO.getId();
         this.name = actorDTO.getName();
     }
+
 }

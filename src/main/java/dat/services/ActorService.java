@@ -4,23 +4,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dat.dtos.ActorDTO;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ActorService {
     private static final String apiKey = System.getenv("api_key");
 
-    public static List<ActorDTO> getActors(String movieId) throws IOException {
+    public static Set<ActorDTO> getActors(Long movieId) throws RuntimeException {
         HttpResponse<String> response;
         ObjectMapper objectMapper = new ObjectMapper();
         String uri = "https://api.themoviedb.org/3/movie/" + movieId + "/credits?language=en-US&api_key=" + apiKey;
 
-        List<ActorDTO> actors = new ArrayList<>();
+        Set<ActorDTO> actors = new HashSet<>();
 
         try {
             HttpClient client = HttpClient.newHttpClient();
@@ -37,7 +36,7 @@ public class ActorService {
 
                 if (castArray.isArray()) {
                     for (JsonNode castMember : castArray) {
-                        if (castMember.get("known_for_department").asText().equals("Acting")) {
+                        if ("Acting".equals(castMember.get("known_for_department").asText())) {
                             int id = castMember.get("id").asInt();
                             String name = castMember.get("name").asText();
                             actors.add(new ActorDTO(id, name));
@@ -48,7 +47,7 @@ public class ActorService {
                 System.out.println("GET request failed. Status code: " + response.statusCode());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error fetching actor data: " + e.getMessage(), e);
         }
         return actors;
     }
