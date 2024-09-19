@@ -33,8 +33,6 @@ public class Main {
             throw new IllegalStateException("API key is not set. Please set the 'api_key' environment variable.");
         }
 
-        alterTableMovies(emf);
-
         String responseBody = fetchMoviesFromAPI(apiKey);
         if (responseBody != null) {
             persistDataToDB(responseBody, emf);
@@ -93,21 +91,6 @@ public class Main {
             transaction.commit();
         } catch (Exception e) {
             System.err.println("Error persisting data to DB: " + e.getMessage());
-        }
-    }
-
-    public static void alterTableMovies(EntityManagerFactory emf) {
-        try (EntityManager em = emf.createEntityManager()) {
-            var transaction = em.getTransaction();
-            transaction.begin();
-
-            String sql = "ALTER TABLE movies ALTER COLUMN overview TYPE VARCHAR(1000)";
-            em.createNativeQuery(sql).executeUpdate();
-
-            transaction.commit();
-            System.out.println("Table 'movies' altered successfully.");
-        } catch (Exception e) {
-            System.err.println("Error altering table 'movies': " + e.getMessage());
         }
     }
 }
