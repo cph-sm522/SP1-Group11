@@ -26,6 +26,7 @@ public class Movie {
 
     private double duration;
     private double rating;
+    @Column(length = 1000)
     private String overview;
     private LocalDate releaseDate;
 
