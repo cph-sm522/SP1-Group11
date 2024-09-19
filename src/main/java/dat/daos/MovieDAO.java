@@ -8,6 +8,7 @@ import dat.entities.Movie;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
 
 import javax.swing.*;
 import java.util.HashSet;
@@ -140,8 +141,14 @@ public class MovieDAO {
     }
 
     public static MovieDTO getMovieByTitle(String title){
-        try(EntityManager em = emf.createEntityManager()){
-            return new MovieDTO(em.find(Movie.class, title));
+        try (EntityManager em = emf.createEntityManager()) {
+            Movie movie = em.createQuery("SELECT m FROM Movie m WHERE m.title = :title", Movie.class)
+                    .setParameter("title", title)
+                    .getSingleResult();
+            return new MovieDTO(movie);
+        } catch (NoResultException e) {
+            // Handle case where no movie is found
+            return null;
         }
     }
 
