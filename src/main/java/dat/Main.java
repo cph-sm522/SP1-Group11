@@ -5,14 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dat.config.HibernateConfig;
 import dat.dtos.ActorDTO;
 import dat.dtos.DirectorDTO;
-import dat.dtos.MovieDTO;
-import dat.entities.Actor;
-import dat.entities.Director;
 import dat.entities.Movie;
 import dat.services.ActorService;
 import dat.services.DirectorService;
 import dat.services.MovieService;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
 import java.io.IOException;
@@ -22,7 +18,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 public class Main {
@@ -84,13 +79,13 @@ public class Main {
                     MovieService.createMovie(id, title, releaseDate, genre, rating, overview, director, actors, emf);
 
                 } catch (Exception e) {
-                    System.err.println("Error processing movie: " + movieNode.get("title").asText() + " - " + e.getMessage());
+                    System.out.println("Error processing movie: " + movieNode.get("title").asText() + " - " + e.getMessage());
                 }
             }
 
             transaction.commit();
         } catch (Exception e) {
-            System.err.println("Error persisting data to DB: " + e.getMessage());
+            System.out.println("Error persisting data to DB: " + e.getMessage());
         }
     }
 }
