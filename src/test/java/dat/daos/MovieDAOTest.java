@@ -1,11 +1,8 @@
 package dat.daos;
 
 import dat.config.HibernateConfig;
-import dat.dtos.ActorDTO;
-import dat.dtos.DirectorDTO;
+
 import dat.dtos.MovieDTO;
-import dat.entities.Actor;
-import dat.entities.Director;
 import dat.entities.Movie;
 import dat.services.JsonService;
 import jakarta.persistence.EntityManager;
@@ -16,10 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,7 +36,6 @@ class MovieDAOTest {
 
             em.getTransaction().commit();
 
-            // Create test movies with provided IDs
             String m1Json = "{\"id\":1,\"title\":\"Inception\",\"genre\":\"SCIENCE_FICTION\",\"duration\":148.0,\"rating\":8.8,\"overview\":\"A thief who steals corporate secrets through the use of dream-sharing technology is tasked with planting an idea in a CEO's mind.\",\"releaseDate\":\"2010-07-16\",\"director\":{\"id\":1,\"name\":\"Christopher Nolan\"},\"actors\":[{\"id\":1,\"name\":\"Leonardo DiCaprio\"},{\"id\":2,\"name\":\"Joseph Gordon-Levitt\"}]}";
             m1 = JsonService.convertJsonToObject(m1Json, MovieDTO.class);
             movieDAO.createMovie(m1);
@@ -84,17 +78,28 @@ class MovieDAOTest {
     @Test
     void getAllMovies() {
         List<MovieDTO> movies = movieDAO.getAllMovies();
-        assertEquals(2, movies.size());  // Update expected value if necessary
+        assertEquals(2, movies.size());
     }
 
     @Test
     void getAllByGenreMovies() {
+        //action
+        List<MovieDTO> actionMovies = movieDAO.getAllByGenreMovies(Movie.Genre.ACTION);
+        assertEquals(1, actionMovies.size());
+        assertEquals(m2.getTitle(), actionMovies.get(0).getTitle());
 
+        //science_fiction
+        List<MovieDTO> sciFiMovies = movieDAO.getAllByGenreMovies(Movie.Genre.SCIENCE_FICTION);
+        assertEquals(1, sciFiMovies.size());
+        assertEquals(m1.getTitle(), sciFiMovies.get(0).getTitle());
+
+        //genre with no movies
+        List<MovieDTO> dramaMovies = movieDAO.getAllByGenreMovies(Movie.Genre.DRAMA);
+        assertEquals(0, dramaMovies.size());
     }
 
     @Test
     void deleteMovie() {
-
         MovieDTO foundMovie = movieDAO.getMovieById(m1.getId());
         assertNotNull(foundMovie);
 
@@ -120,6 +125,4 @@ class MovieDAOTest {
         System.setOut(System.out);
     }
 
-    @Test
-    void getMoviesByGenre() {}
 }

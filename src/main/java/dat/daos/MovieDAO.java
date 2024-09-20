@@ -158,9 +158,14 @@ public class MovieDAO {
         }
     }
 
-    public static List<MovieDTO> getAllByGenreMovies() {
+    public static List<MovieDTO> getAllByGenreMovies(Movie.Genre genre) { //chose based on genre
         try (EntityManager em = emf.createEntityManager()) {
-            return em.createQuery("SELECT new dat.dtos.MovieDTO(m) FROM Movie m", MovieDTO.class).getResultList();
+            return em.createQuery("SELECT new dat.dtos.MovieDTO(m) FROM Movie m WHERE m.genre = :genre", MovieDTO.class)
+                    .setParameter("genre", genre)
+                    .getResultList();
+        } catch (NoResultException e) {
+
+            return List.of();
         }
     }
 
