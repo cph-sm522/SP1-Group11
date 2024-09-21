@@ -16,8 +16,6 @@ public class MovieService {
     public static MovieDTO createMovie(Long id, String title, LocalDate releaseDate, Movie.Genre genre, double rating, String overview, DirectorDTO director, Set<ActorDTO> actors, EntityManagerFactory emf) throws IOException, InterruptedException {
 
         MovieDAO movieDAO = MovieDAO.getInstance(emf);
-        DirectorDTO directorInfo = DirectorService.getDirectorInfo(id);
-        Set<ActorDTO> actorInfo = ActorService.getActors(id);
 
         // Create MovieDTO object
         MovieDTO movieDTO = MovieDTO.builder()
@@ -35,7 +33,6 @@ public class MovieService {
         String json = JsonService.convertObjectToJson(movieDTO);
         System.out.println("Movie Data as JSON: " + json); // For logging or debugging
 
-        // Persist movieDTO using DAO
         return movieDAO.createMovie(movieDTO);
     }
 }

@@ -10,7 +10,6 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 
-import javax.swing.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,7 +46,6 @@ public class MovieDAO {
                 em.persist(movie.getDirector());
             }
 
-            // Handle Actors
             Set<Actor> actors = new HashSet<>();
             for (ActorDTO actorDTO : movieDTO.getActors()) {
                 Actor actor = em.find(Actor.class, actorDTO.getId());
@@ -59,13 +57,9 @@ public class MovieDAO {
             }
             movie.setActors(actors);
 
-
             em.persist(movie);
 
-
             transaction.commit();
-
-
             return new MovieDTO(movie);
 
         } catch (Exception e) {
@@ -73,66 +67,59 @@ public class MovieDAO {
                 transaction.rollback();
             }
             throw new RuntimeException("Error creating movie", e);
-        } finally {
-            em.close();
         }
     }
 
-
-/*    public MovieDTO updateActivity(MovieDTO movieDTO) {
+    public MovieDTO updateMovie(MovieDTO movieDTO) {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
 
-            // Find existing Activity by ID, throw an exception if not found
             Movie movie = em.find(Movie.class, movieDTO.getId());
             if (movie == null) {
                 throw new IllegalArgumentException("Movie with ID " + movieDTO.getId() + " not found.");
             }
 
-            // Update activity with new DTO values
             movie.setTitle(movieDTO.getTitle());
             movie.setDuration(movieDTO.getDuration());
             movie.setGenre(movieDTO.getGenre());
-            movie.setActors(movieDTO.getActors());
             movie.setOverview(movieDTO.getOverview());
             movie.setRating(movieDTO.getRating());
             movie.setReleaseDate(movieDTO.getReleaseDate());
-            movie.setDirector(movieDTO.getDirector());
 
-            // Handle CityInfo - check if it exists and update it if necessary
-            Actor actor = em.find(Actor.class, movieDTO.getActors().getId());
-            if (actor != null) {
-                movie.setActors(new Actor(movieDTO.getActors()));
+            // check if it exists and update it if necessary
+            Director director = em.find(Director.class, movieDTO.getDirector().getId());
+            if (director != null) {
+                movie.setDirector(director);
             } else {
-                throw new IllegalArgumentException("CityInfo with ID " + movieDTO.getActors().getId() + " not found.");
+                throw new IllegalArgumentException("Director with ID " + movieDTO.getDirector().getId() + " not found.");
             }
 
-            // Handle WeatherInfo - check if it exists and update it if necessary
-            Director weatherInfo = em.find(Director.class, movieDTO.getDirector().getId());
-            if (weatherInfo != null) {
-                movie.setDirector(new Director(movieDTO.getDirector()));
-            } else {
-                throw new IllegalArgumentException("WeatherInfo with ID " + movieDTO.getDirector().getId() + " not found.");
+            // check if it exists and update it if necessary
+            Set<Actor> actors = new HashSet<>();
+            for (ActorDTO actorDTO : movieDTO.getActors()) {
+                Actor actor = em.find(Actor.class, actorDTO.getId());
+                if (actor == null) {
+                    actor = new Actor(actorDTO);
+                    em.persist(actor);
+                }
+                actors.add(actor);
             }
+            movie.setActors(actors);
 
-            // Merge the updated activity
             em.merge(movie);
-
             em.getTransaction().commit();
 
-            // Return the updated ActivityDTO based on the updated entity
+            // return updated MovieDTO based on the updated entity
             return new MovieDTO(movie);
 
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
-            throw e; // Optionally handle the exception better
-        } finally {
-            em.close();
+            throw e;
         }
-    }*/
+    }
 
     public static MovieDTO getMovieById(Long id) {
         try (EntityManager em = emf.createEntityManager()) {
@@ -264,7 +251,5 @@ public class MovieDAO {
         } finally {
             em.close();
         }
-
     }
-
 }
