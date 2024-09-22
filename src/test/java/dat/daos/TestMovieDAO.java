@@ -90,6 +90,8 @@ class TestMovieDAO {
         assertEquals("Inception", movie.getTitle(), "Movie title should match.");
     }
 
+
+
     @Test
     void testUpdateMovie() {
         MovieDTO movie = movieDAO.getMovieById(1L);
