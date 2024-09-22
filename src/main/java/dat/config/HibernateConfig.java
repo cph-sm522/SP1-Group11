@@ -1,6 +1,8 @@
 package dat.config;
 
-import dat.entities.Person;
+import dat.entities.Actor;
+import dat.entities.Director;
+import dat.entities.Movie;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -30,7 +32,9 @@ public class HibernateConfig {
     // TODO: IMPORTANT: Add Entity classes here for them to be registered with Hibernate
     private static void getAnnotationConfiguration(Configuration configuration) {
         //configuration.addAnnotatedClass("INSERT ENTITY".class);
-        configuration.addAnnotatedClass(Person.class);
+        configuration.addAnnotatedClass(Actor.class);
+        configuration.addAnnotatedClass(Movie.class);
+        configuration.addAnnotatedClass(Director.class);
     }
 
     private static EntityManagerFactory createEMF(boolean forTest, String DBName) {
@@ -64,7 +68,7 @@ public class HibernateConfig {
 
     private static String getDBName() {
 //        return Utils.getPropertyValue("db.name", "properties-from-pom.properties");
-        return "INSERT DB NAME";
+        return "movieDB-SP1";
     }
 
     private static Properties setBaseProperties(Properties props){

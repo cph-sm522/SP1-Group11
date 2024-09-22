@@ -1,6 +1,7 @@
 package dat.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import dat.entities.Actor;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,11 +13,14 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PersonDTO {
+public class ActorDTO {
 
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private String job;
+
+    public ActorDTO(Actor actor) {
+        this.id = actor.getId();
+        this.name = actor.getName();
+    }
 }
+

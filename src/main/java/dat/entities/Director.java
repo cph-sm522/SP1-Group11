@@ -1,7 +1,10 @@
 package dat.entities;
 
-import jakarta.persistence.Entity;
+import dat.dtos.DirectorDTO;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Set;
 
 @Entity
 @ToString
@@ -10,6 +13,22 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class Director extends Person {
+public class Director{
+
+    @Id
+    private int id;
+    private String name;
+
+    @OneToMany(mappedBy = "director")
+    private Set<Movie> movies;
+
+    private String job;
+
+    public Director(DirectorDTO directorDTO) {
+        this.id = directorDTO.getId();
+        this.name = directorDTO.getName();
+        this.job = directorDTO.getJob();
+
+    }
 
 }
