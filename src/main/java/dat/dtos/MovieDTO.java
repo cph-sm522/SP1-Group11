@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,7 @@ public class MovieDTO {
     private Long id;
 
     private String title;
+    private List<Integer> genreIds;
     private Movie.Genre genre;
     private double duration;
     private double rating;
@@ -38,6 +40,7 @@ public class MovieDTO {
     public MovieDTO(Movie movie) {
         this.id = movie.getId();
         this.title = movie.getTitle();
+        this.genreIds = movie.getGenreIds();
         this.genre = movie.getGenre();
         this.duration = movie.getDuration();
         this.rating = movie.getRating();

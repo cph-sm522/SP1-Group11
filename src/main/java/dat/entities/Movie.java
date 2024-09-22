@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,8 @@ public class Movie {
     private String title;
     @Enumerated(EnumType.STRING)
     private Genre genre;
-
+    @ElementCollection
+    private List<Integer> genreIds;
     private double duration;
     private double rating;
     @Column(length = 1000)
@@ -88,9 +90,10 @@ public class Movie {
         }
     }
 
-    public Movie(MovieDTO movieDTO) {
+    public Movie(MovieDTO movieDTO){
         this.id = movieDTO.getId();
         this.title = movieDTO.getTitle();
+        this.genreIds = movieDTO.getGenreIds();
         this.genre = movieDTO.getGenre();
         this.duration = movieDTO.getDuration();
         this.rating = movieDTO.getRating();

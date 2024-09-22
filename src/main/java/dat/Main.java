@@ -20,6 +20,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 public class Main {
@@ -63,30 +64,38 @@ public class Main {
 
             for (JsonNode movieNode : moviesNode) {
                 try {
-                    String movieJson = movieNode.toString();
-                    MovieDTO movieDTO = JsonService.convertJsonToObject(movieJson, MovieDTO.class);
+                    MovieDTO movieDTO = JsonService.convertJsonToObject(movieNode.toString(), MovieDTO.class);
 
-                    if (movieDTO != null) {
-                        MovieService.createMovie(
-                                movieDTO.getId(),
-                                movieDTO.getTitle(),
-                                movieDTO.getReleaseDate(),
-                                movieDTO.getGenre(),
-                                movieDTO.getRating(),
-                                movieDTO.getOverview(),
-                                movieDTO.getDirector(),
-                                movieDTO.getActors(),
-                                emf
-                        );
+                    if (movieDTO == null) {
+                        throw new IllegalArgumentException("Invalid movie data in the JSON response");
                     }
+
+                    if (movieNode.has("genre_ids")) {
+                        List<Integer> genreIds = objectMapper.convertValue(movieNode.get("genre_ids"), List.class);
+                        movieDTO.setGenreIds(genreIds);
+                    }
+
+                    DirectorDTO director = DirectorService.getDirectorInfo(movieDTO.getId());
+                    Set<ActorDTO> actors = ActorService.getActors(movieDTO.getId());
+
+                    movieDTO.setDirector(director);
+                    movieDTO.setActors(actors);
+
+                    MovieService.createMovie(movieDTO.getId(), movieDTO.getTitle(), movieDTO.getReleaseDate(),
+                            movieDTO.getGenre(), movieDTO.getRating(), movieDTO.getOverview(),
+                            director, actors, emf);
+
+                    System.out.println("Successfully persisted movie: " + movieDTO.getTitle());
+
                 } catch (Exception e) {
                     System.out.println("Error processing movie: " + movieNode.get("title").asText() + " - " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
-
             transaction.commit();
         } catch (Exception e) {
             System.out.println("Error persisting data to DB: " + e.getMessage());
         }
     }
+
 }

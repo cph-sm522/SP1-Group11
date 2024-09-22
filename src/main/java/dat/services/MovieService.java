@@ -29,9 +29,9 @@ public class MovieService {
                 .actors(actors)
                 .build();
 
-        // Convert movieDTO to JSON string
-        String json = JsonService.convertObjectToJson(movieDTO);
-        System.out.println("Movie Data as JSON: " + json); // For logging or debugging
+        // Convert movieDTO to JSONstring
+        /*String json = JsonService.convertObjectToJson(movieDTO);
+        //System.out.println("Movie Data as JSON: " + json); // For logging or debugging*/
 
         return movieDAO.createMovie(movieDTO);
     }
