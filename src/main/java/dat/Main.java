@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dat.config.HibernateConfig;
 import dat.dtos.ActorDTO;
 import dat.dtos.DirectorDTO;
+import dat.dtos.MovieDTO;
 import dat.entities.Movie;
 import dat.services.ActorService;
 import dat.services.DirectorService;
+import dat.services.JsonService;
 import dat.services.MovieService;
 import jakarta.persistence.EntityManagerFactory;
 
@@ -36,14 +38,13 @@ public class Main {
 
     public static String fetchMoviesFromAPI(String apiKey) throws URISyntaxException, IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&primary_release_date.gte=2019-01-01&sort_by=popularity.desc&with_origin_country=DK&api_key=" + apiKey))
-                .GET()
-                .build();
+        String url = "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US" +
+                "&page=1&primary_release_date.gte=2019-01-01&with_origin_country=DK&sort_by=popularity.desc&api_key=" + apiKey;
 
+        HttpRequest request = HttpRequest.newBuilder().uri(new URI(url)).GET().build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() == 200) {
 
+        if (response.statusCode() == 200) {
             System.out.println(response.body());
             return response.body();
         } else {
@@ -62,22 +63,22 @@ public class Main {
 
             for (JsonNode movieNode : moviesNode) {
                 try {
-                    Long id = movieNode.get("id").asLong();
-                    String title = movieNode.get("title").asText();
-                    LocalDate releaseDate = movieNode.hasNonNull("release_date") ?
-                            LocalDate.parse(movieNode.get("release_date").asText()) : null;
+                    String movieJson = movieNode.toString();
+                    MovieDTO movieDTO = JsonService.convertJsonToObject(movieJson, MovieDTO.class);
 
-                    double rating = movieNode.get("vote_average").asDouble();
-                    String overview = movieNode.get("overview").asText();
-
-                    // Select only the first genre
-                    Movie.Genre genre = Movie.Genre.fromId(movieNode.get("genre_ids").get(0).asInt());
-
-                    DirectorDTO director = DirectorService.getDirectorInfo(id);
-                    Set<ActorDTO> actors = ActorService.getActors(id);
-
-                    MovieService.createMovie(id, title, releaseDate, genre, rating, overview, director, actors, emf);
-
+                    if (movieDTO != null) {
+                        MovieService.createMovie(
+                                movieDTO.getId(),
+                                movieDTO.getTitle(),
+                                movieDTO.getReleaseDate(),
+                                movieDTO.getGenre(),
+                                movieDTO.getRating(),
+                                movieDTO.getOverview(),
+                                movieDTO.getDirector(),
+                                movieDTO.getActors(),
+                                emf
+                        );
+                    }
                 } catch (Exception e) {
                     System.out.println("Error processing movie: " + movieNode.get("title").asText() + " - " + e.getMessage());
                 }

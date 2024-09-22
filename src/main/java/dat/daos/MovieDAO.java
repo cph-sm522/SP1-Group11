@@ -127,7 +127,7 @@ public class MovieDAO {
         }
     }
 
-    public static MovieDTO getMovieByTitle(String title){
+    public static MovieDTO getMovieByTitle(String title) {
         try (EntityManager em = emf.createEntityManager()) {
             Movie movie = em.createQuery("SELECT m FROM Movie m WHERE m.title = :title", Movie.class)
                     .setParameter("title", title)
@@ -251,5 +251,19 @@ public class MovieDAO {
         } finally {
             em.close();
         }
+    }
+
+    public List<MovieDTO> getTop10Movies() {
+        EntityManager em = emf.createEntityManager();
+        return em.createQuery("SELECT new dat.dtos.MovieDTO(m) FROM Movie m ORDER BY m.rating DESC", MovieDTO.class)
+                .setMaxResults(10)
+                .getResultList();
+    }
+
+
+    public double getAverageRating() {
+        EntityManager em = emf.createEntityManager();
+        return em.createQuery("SELECT AVG(m.rating) FROM Movie m", Double.class).getSingleResult();
+
     }
 }
